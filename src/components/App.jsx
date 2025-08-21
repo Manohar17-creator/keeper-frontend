@@ -1,59 +1,62 @@
-// App.jsx
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
-import Footer from "./Footer";
-import Note from "./Note";
-import CreateArea from "./CreateArea";
 import axios from "axios";
+import CreateArea from "./CreateArea";
+import Note from "./Note";
+
+// Use backend URL from .env
+const API_URL = process.env.REACT_APP_API_URL;
 
 function App() {
   const [notes, setNotes] = useState([]);
 
-  // 🔑 API URL: use env var if provided, else fallback to localhost
-  // App.jsx
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
-
-
-  // Fetch notes on page load
+  // Fetch notes on load
   useEffect(() => {
-    axios.get(`${API_URL}/notes`)
-      .then(res => setNotes(res.data))
-      .catch(err => console.error("Error fetching notes:", err));
-  }, [API_URL]);
+    axios
+      .get(`${API_URL}/notes`)
+      .then((res) => {
+        setNotes(res.data);
+      })
+      .catch((err) => {
+        console.error("Error fetching notes:", err);
+      });
+  }, []);
 
+  // Add a new note
   function addNote(newNote) {
-    axios.post(`${API_URL}/notes`, {
-      title: newNote.title,
-      content: newNote.content
-    })
-    .then(res => {
-      setNotes(prev => [...prev, res.data]);
-    })
-    .catch(err => console.error("Error adding note:", err));
+    axios
+      .post(`${API_URL}/notes`, newNote)
+      .then((res) => {
+        setNotes((prevNotes) => [...prevNotes, res.data]);
+      })
+      .catch((err) => {
+        console.error("Error adding note:", err);
+      });
   }
 
+  // Delete a note
   function deleteNote(id) {
-    axios.delete(`${API_URL}/notes/${id}`)
+    axios
+      .delete(`${API_URL}/notes/${id}`)
       .then(() => {
-        setNotes(prev => prev.filter(note => note.id !== id));
+        setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
       })
-      .catch(err => console.error("Error deleting note:", err));
+      .catch((err) => {
+        console.error("Error deleting note:", err);
+      });
   }
 
   return (
     <div>
-      <Header />
       <CreateArea onAdd={addNote} />
-      {notes.map(noteItem => (
+      {notes.map((note) => (
         <Note
-          key={noteItem.id}
-          id={noteItem.id}
-          title={noteItem.title}
-          content={noteItem.content}
+          key={note.id}
+          id={note.id}
+          title={note.title}
+          content={note.content}
           onDelete={deleteNote}
         />
       ))}
-      <Footer />
     </div>
   );
 }
