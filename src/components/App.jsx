@@ -10,7 +10,9 @@ function App() {
   const [notes, setNotes] = useState([]);
 
   // 🔑 API URL: use env var if provided, else fallback to localhost
-  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+  // App.jsx
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5001";
+
 
   // Fetch notes on page load
   useEffect(() => {
