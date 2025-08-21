@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import CreateArea from "./CreateArea";
 import Note from "./Note";
-
+import Header from "./Header";
 // Use backend URL from .env
 const API_URL = process.env.REACT_APP_API_URL;
 
@@ -47,6 +47,7 @@ function App() {
 
   return (
     <div>
+      <Header />
       <CreateArea onAdd={addNote} />
       {notes.map((note) => (
         <Note
